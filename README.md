@@ -25,11 +25,11 @@ https://github.com/Satyam6024/Eye-Disease-Prediction
 ### STEP 01- Create a conda environment after opening the repository
 
 ```bash
-conda create -n edp python=3.8 -y
+conda create -n tensorflow_env python=3.8 -y
 ```
 
 ```bash
-conda activate edp
+conda activate tensorflow_env
 ```
 
 
