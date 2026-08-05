@@ -12,3 +12,4 @@ src/EyeDiseaseClassifier/constants/__init__.py
 src/EyeDiseaseClassifier/entity/__init__.py
 src/EyeDiseaseClassifier/pipeline/__init__.py
 src/EyeDiseaseClassifier/utils/__init__.py
+src/EyeDiseaseClassifier/utils/common.py
