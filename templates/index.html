@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retinal OCT Disease Predictor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center">
+    <h1 class="text-2xl font-bold mb-4 text-gray-800">Retinal OCT Classifier</h1>
+    
+    <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(event)">
+    <label for="imageInput" class="border-2 border-dashed border-gray-300 rounded-lg p-6 block cursor-pointer hover:border-blue-500 mb-4">
+      <p id="uploadText" class="text-gray-500">Click or drag OCT scan here</p>
+      <img id="imagePreview" class="hidden max-h-48 mx-auto rounded">
+    </label>
+
+    <button onclick="uploadAndPredict()" id="predictBtn" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+      Predict Diagnosis
+    </button>
+
+    <div id="resultCard" class="hidden mt-6 p-4 rounded-lg bg-gray-50 border">
+      <p class="text-sm text-gray-500">Prediction Result</p>
+      <p id="predictionText" class="text-2xl font-bold text-blue-600 mt-1"></p>
+    </div>
+  </div>
+
+  <script>
+    let base64Image = "";
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Strip data prefix (e.g., "data:image/jpeg;base64,") for decodeImage compatibility
+        base64Image = e.target.result.split(',')[1]; 
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('imagePreview').classList.remove('hidden');
+        document.getElementById('uploadText').classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function uploadAndPredict() {
+      if (!base64Image) {
+        alert("Please select an OCT image first.");
+        return;
+      }
+      
+      const btn = document.getElementById('predictBtn');
+      btn.innerText = "Analyzing...";
+      btn.disabled = true;
+
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Image })
+        });
+
+        const data = await response.json();
+        document.getElementById('predictionText').innerText = data[0].image;
+        document.getElementById('resultCard').classList.remove('hidden');
+      } catch (err) {
+        alert("Prediction request failed.");
+      } finally {
+        btn.innerText = "Predict Diagnosis";
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
