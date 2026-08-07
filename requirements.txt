@@ -16,4 +16,6 @@ scipy
 Flask
 Flask-Cors
 gdown
+dagshub
+setuptools<70.0.0
 -e .
