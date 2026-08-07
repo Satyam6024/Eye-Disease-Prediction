@@ -1,0 +1,54 @@
+stages:
+  data_ingestion:
+    cmd: python src/EyeDiseaseClassifier/pipeline/stage01_data_ingestion.py
+    deps:
+      - src/EyeDiseaseClassifier/pipeline/stage01_data_ingestion.py
+      - config/config.yaml
+    outs:
+      - artifacts/data_ingestion/train
+      - artifacts/data_ingestion/val
+      - artifacts/data_ingestion/test
+
+  prepare_base_model:
+    cmd: python src/EyeDiseaseClassifier/pipeline/stage02_prepare_base_model.py
+    deps:
+      - src/EyeDiseaseClassifier/pipeline/stage02_prepare_base_model.py
+      - config/config.yaml
+    params:
+      - IMAGE_SIZE
+      - INCLUDE_TOP
+      - CLASSES
+      - WEIGHTS
+      - LEARNING_RATE
+    outs:
+      - artifacts/prepare_base_model
+
+  training:
+    cmd: python src/EyeDiseaseClassifier/pipeline/stage03_model_training.py
+    deps:
+      - src/EyeDiseaseClassifier/pipeline/stage03_model_training.py
+      - config/config.yaml
+      - artifacts/data_ingestion/train
+      - artifacts/data_ingestion/val
+      - artifacts/prepare_base_model
+    params:
+      - IMAGE_SIZE
+      - EPOCHS
+      - BATCH_SIZE
+      - AUGMENTATION
+    outs:
+      - artifacts/training/model.h5
+
+  evaluation:
+    cmd: python src/EyeDiseaseClassifier/pipeline/stage04_model_evaluation.py
+    deps:
+      - src/EyeDiseaseClassifier/pipeline/stage04_model_evaluation.py
+      - config/config.yaml
+      - artifacts/data_ingestion/test
+      - artifacts/training/model.h5
+    params:
+      - IMAGE_SIZE
+      - BATCH_SIZE
+    metrics:
+    - scores.json:
+        cache: false

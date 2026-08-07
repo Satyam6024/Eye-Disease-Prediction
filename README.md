@@ -25,7 +25,7 @@ https://github.com/Satyam6024/Eye-Disease-Prediction
 ### STEP 01- Create a conda environment after opening the repository
 
 ```bash
-conda create -n tensorflow_env python=3.8 -y
+conda create -n tensorflow_env python=3.10 -y
 ```
 
 ```bash
@@ -45,42 +45,22 @@ python app.py
 
 Now,
 ```bash
-open up you local host and port
+open up you local host and port 
+localhost:8000
+
 ```
-
-
-
-
 
 
 ## MLflow
 
 - [Documentation](https://mlflow.org/docs/latest/index.html)
 
-- [MLflow tutorial](https://youtu.be/qdcHHrsXA48?si=bD5vDS60akNphkem)
 
 ##### cmd
-- mlflow ui
+- mlflow ui = "https://dagshub.com/Satyam6024/Eye-Disease-Prediction.mlflow"
 
 ### dagshub
 [dagshub](https://dagshub.com/)
-
-MLFLOW_TRACKING_URI=https://dagshub.com/entbappy/Kidney-Disease-Classification-MLflow-DVC.mlflow \
-MLFLOW_TRACKING_USERNAME=entbappy \
-MLFLOW_TRACKING_PASSWORD=6824692c47a369aa6f9eac5b10041d5c8edbcef0 \
-python script.py
-
-Run this to export as env variables:
-
-```bash
-
-export MLFLOW_TRACKING_URI=https://dagshub.com/entbappy/Kidney-Disease-Classification-MLflow-DVC.mlflow
-
-export MLFLOW_TRACKING_USERNAME=entbappy 
-
-export MLFLOW_TRACKING_PASSWORD=6824692c47a369aa6f9eac5b10041d5c8edbcef0
-
-```
 
 
 ### DVC cmd
@@ -140,7 +120,7 @@ DVC
 
 	
 ## 3. Create ECR repo to store/save docker image
-    - Save the URI: 566373416292.dkr.ecr.us-east-1.amazonaws.com/chicken
+    - Save the URI: 825680719632.dkr.ecr.us-east-1.amazonaws.com/eye-disease-prediction-app
 
 	
 ## 4. Create EC2 machine (Ubuntu) 
@@ -178,5 +158,5 @@ DVC
 
     AWS_ECR_LOGIN_URI = demo>>  566373416292.dkr.ecr.ap-south-1.amazonaws.com
 
-    ECR_REPOSITORY_NAME = simple-app
+    ECR_REPOSITORY_NAME = 
 
