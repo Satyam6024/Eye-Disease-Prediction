@@ -81,3 +81,8 @@ class Training:
             path=self.config.trained_model_path,
             model=self.model
         )
+        
+        # Also copy the model to the 'model' directory
+        import shutil
+        os.makedirs("model", exist_ok=True)
+        shutil.copy(self.config.trained_model_path, "model/model.h5")
