@@ -270,3 +270,45 @@ AttributeError: 'ConfigurationManager' object has no attribute 'get_data_ingesti
 [2026-08-06 23:18:23,637: INFO: dir_util: creating C:\Eye-Disease-Prediction\mlruns\0\90f9257dfe95440fa3f1aea43dbf7bb0\artifacts\model\data\model\variables]
 [2026-08-06 23:18:23,801: INFO: main: Model Evaluation completed
 ]
+[2026-08-07 09:36:46,972: INFO: stage01_data_ingestion: 
+====================]
+[2026-08-07 09:36:46,972: INFO: stage01_data_ingestion: Data Ingestion started ]
+[2026-08-07 09:36:46,975: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2026-08-07 09:36:46,979: INFO: common: yaml file: params.yaml loaded successfully]
+[2026-08-07 09:36:46,980: INFO: common: created directory at: artifacts]
+[2026-08-07 09:36:46,980: INFO: common: created directory at: artifacts/data_ingestion]
+[2026-08-07 09:36:46,981: INFO: data_ingestion: Downloading data from https://drive.google.com/file/d/1ILUpxc3P3NOA7s9xd9Fdr3TIurO-bhQi/view?usp=sharing into file artifacts/data_ingestion/data.zip]
+[2026-08-07 09:41:39,591: INFO: data_ingestion: Downloaded data from https://drive.google.com/file/d/1ILUpxc3P3NOA7s9xd9Fdr3TIurO-bhQi/view?usp=sharing into file artifacts/data_ingestion/data.zip]
+[2026-08-07 09:44:04,811: INFO: stage01_data_ingestion: Data Ingestion completed
+]
+[2026-08-07 10:09:17,704: INFO: stage02_prepare_base_model: >>>>> stage Prepare Base Model started <<<<<]
+[2026-08-07 10:09:17,709: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2026-08-07 10:09:17,712: INFO: common: yaml file: params.yaml loaded successfully]
+[2026-08-07 10:09:17,713: INFO: common: created directory at: artifacts]
+[2026-08-07 10:09:17,714: INFO: common: created directory at: artifacts/prepare_base_model]
+[2026-08-07 10:09:20,465: WARNING: saving_utils: Compiled the loaded model, but the compiled metrics have yet to be built. `model.compile_metrics` will be empty until you train or evaluate the model.]
+[2026-08-07 10:09:20,745: INFO: stage02_prepare_base_model: >>>>> stage Prepare Base Model completed!<<<<<
+
+x==========x]
+[2026-08-07 10:09:56,887: INFO: stage03_model_training: >>>>> stage Model Training Stage started <<<<<]
+[2026-08-07 10:09:56,890: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2026-08-07 10:09:56,892: INFO: common: yaml file: params.yaml loaded successfully]
+[2026-08-07 10:09:56,892: INFO: common: created directory at: artifacts]
+[2026-08-07 10:09:56,893: INFO: common: created directory at: artifacts\training]
+[2026-08-07 10:30:59,218: INFO: stage03_model_training: >>>>> stage Model Training Stage completed!<<<<<
+
+x==========x]
+[2026-08-07 10:31:34,701: INFO: stage04_model_evaluation: >>>>> stage Model Evaluation Stage started <<<<<]
+[2026-08-07 10:31:34,704: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2026-08-07 10:31:34,706: INFO: common: yaml file: params.yaml loaded successfully]
+[2026-08-07 10:31:34,706: INFO: common: created directory at: artifacts]
+[2026-08-07 10:33:06,306: INFO: common: json file saved at: scores.json]
+[2026-08-07 10:33:08,162: WARNING: save: Found untraced functions such as _jit_compiled_convolution_op, _jit_compiled_convolution_op, _jit_compiled_convolution_op, _jit_compiled_convolution_op, _jit_compiled_convolution_op while saving (showing 5 of 13). These functions will not be directly callable after loading.]
+[2026-08-07 10:33:08,827: INFO: builder_impl: Assets written to: C:\Users\ssssa\AppData\Local\Temp\tmphqyt0hq7\model\data\model\assets]
+[2026-08-07 10:33:22,230: INFO: dir_util: creating C:\Eye-Disease-Prediction\mlruns\0\9bd5e296d05e46ebb9baceb95aa5332b\artifacts\model\data]
+[2026-08-07 10:33:22,231: INFO: dir_util: creating C:\Eye-Disease-Prediction\mlruns\0\9bd5e296d05e46ebb9baceb95aa5332b\artifacts\model\data\model]
+[2026-08-07 10:33:22,232: INFO: dir_util: creating C:\Eye-Disease-Prediction\mlruns\0\9bd5e296d05e46ebb9baceb95aa5332b\artifacts\model\data\model\assets]
+[2026-08-07 10:33:22,235: INFO: dir_util: creating C:\Eye-Disease-Prediction\mlruns\0\9bd5e296d05e46ebb9baceb95aa5332b\artifacts\model\data\model\variables]
+[2026-08-07 10:33:22,354: INFO: stage04_model_evaluation: >>>>> stage Model Evaluation Stage completed!<<<<<
+
+x==========x]

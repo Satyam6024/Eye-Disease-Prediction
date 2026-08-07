@@ -1,0 +1,128 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/EyeDiseaseClassifier/pipeline/stage01_data_ingestion.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: bcc4f864830f5498b7e9f0666f602bdb
+      size: 582
+    - path: src/EyeDiseaseClassifier/pipeline/stage01_data_ingestion.py
+      hash: md5
+      md5: f0bb75d3f2e0c1b9207c6731090f41c6
+      size: 866
+    outs:
+    - path: artifacts/data_ingestion/test
+      hash: md5
+      md5: bdb356c2294aa91015747499564d1fc3.dir
+      size: 718106660
+      nfiles: 10933
+    - path: artifacts/data_ingestion/train
+      hash: md5
+      md5: 21b2b80cbef7bdd78ec71b5d98568d42.dir
+      size: 5039885345
+      nfiles: 76515
+    - path: artifacts/data_ingestion/val
+      hash: md5
+      md5: 1ff34f29cbc82b288050273660f3c20b.dir
+      size: 1435542565
+      nfiles: 21861
+  prepare_base_model:
+    cmd: python src/EyeDiseaseClassifier/pipeline/stage02_prepare_base_model.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: bcc4f864830f5498b7e9f0666f602bdb
+      size: 582
+    - path: src/EyeDiseaseClassifier/pipeline/stage02_prepare_base_model.py
+      hash: md5
+      md5: f2c8cd09e017c7320f8f7c8899f9227a
+      size: 943
+    params:
+      params.yaml:
+        CLASSES: 4
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        INCLUDE_TOP: false
+        LEARNING_RATE: 0.01
+        WEIGHTS: imagenet
+    outs:
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 501bfc65485ba7757a338298d3cda3de.dir
+      size: 118254072
+      nfiles: 2
+  training:
+    cmd: python src/EyeDiseaseClassifier/pipeline/stage03_model_training.py
+    deps:
+    - path: artifacts/data_ingestion/train
+      hash: md5
+      md5: 21b2b80cbef7bdd78ec71b5d98568d42.dir
+      size: 5039885345
+      nfiles: 76515
+    - path: artifacts/data_ingestion/val
+      hash: md5
+      md5: 1ff34f29cbc82b288050273660f3c20b.dir
+      size: 1435542565
+      nfiles: 21861
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 501bfc65485ba7757a338298d3cda3de.dir
+      size: 118254072
+      nfiles: 2
+    - path: config/config.yaml
+      hash: md5
+      md5: bcc4f864830f5498b7e9f0666f602bdb
+      size: 582
+    - path: src/EyeDiseaseClassifier/pipeline/stage03_model_training.py
+      hash: md5
+      md5: a20e56c90f10dee504f608758869c0f7
+      size: 891
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        BATCH_SIZE: 32
+        EPOCHS: 1
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 53457328f12462abaafa67daf7a1e0b1
+      size: 59335840
+  evaluation:
+    cmd: python src/EyeDiseaseClassifier/pipeline/stage04_model_evaluation.py
+    deps:
+    - path: artifacts/data_ingestion/test
+      hash: md5
+      md5: bdb356c2294aa91015747499564d1fc3.dir
+      size: 718106660
+      nfiles: 10933
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 53457328f12462abaafa67daf7a1e0b1
+      size: 59335840
+    - path: config/config.yaml
+      hash: md5
+      md5: bcc4f864830f5498b7e9f0666f602bdb
+      size: 582
+    - path: src/EyeDiseaseClassifier/pipeline/stage04_model_evaluation.py
+      hash: md5
+      md5: 38996bea7f8bfc5793c1db332f911fe1
+      size: 865
+    params:
+      params.yaml:
+        BATCH_SIZE: 32
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: scores.json
+      hash: md5
+      md5: 2537df16b39964e8b6de650cb7f365ab
+      size: 72
