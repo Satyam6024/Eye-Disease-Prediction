@@ -4,24 +4,40 @@
   <meta charset="UTF-8">
   <title>Retinal OCT Disease Predictor</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); }
+    .spinner { border-top-color: transparent; animation: spinner 1s linear infinite; }
+    @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
-  <div class="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center">
-    <h1 class="text-2xl font-bold mb-4 text-gray-800">Retinal OCT Classifier</h1>
-    
+<body class="bg-gradient-to-br from-slate-900 to-slate-700 min-h-screen flex items-center justify-center p-6 font-sans">
+  <div class="glass p-10 rounded-2xl shadow-2xl max-w-lg w-full text-center border border-white/20">
+    <h1 class="text-3xl font-extrabold mb-2 text-slate-800 tracking-tight">Retinal OCT Scanner</h1>
+    <p class="text-slate-500 mb-8 text-sm">Upload a scan for VGG16 classification.</p>
+
     <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(event)">
-    <label for="imageInput" class="border-2 border-dashed border-gray-300 rounded-lg p-6 block cursor-pointer hover:border-blue-500 mb-4">
-      <p id="uploadText" class="text-gray-500">Click or drag OCT scan here</p>
-      <img id="imagePreview" class="hidden max-h-48 mx-auto rounded">
+    <label for="imageInput" class="border-2 border-dashed border-slate-300 rounded-xl p-8 block cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 transition-all duration-300 mb-6 group relative overflow-hidden">
+      <div id="uploadText" class="text-slate-500 group-hover:text-blue-600 transition-colors">
+        <svg class="w-10 h-10 mx-auto mb-3 text-slate-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+        <span class="font-medium">Click to upload</span> or drag and drop<br>
+        <span class="text-xs text-slate-400 mt-1 block">PNG or JPG</span>
+      </div>
+      <img id="imagePreview" class="hidden w-full h-56 object-cover rounded-lg shadow-sm z-10 relative">
     </label>
 
-    <button onclick="uploadAndPredict()" id="predictBtn" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
-      Predict Diagnosis
-    </button>
+    <div class="flex gap-3">
+      <button onclick="uploadAndPredict()" id="predictBtn" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none">
+        <div id="loadingIcon" class="hidden w-5 h-5 border-4 border-white/40 border-t-white rounded-full spinner mr-2"></div>
+        <span id="btnText">Analyze Scan</span>
+      </button>
+      <button onclick="resetUI()" id="resetBtn" class="hidden flex-none bg-slate-200 text-slate-700 px-4 py-3 rounded-xl hover:bg-slate-300 transition-colors" title="Reset">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+      </button>
+    </div>
 
-    <div id="resultCard" class="hidden mt-6 p-4 rounded-lg bg-gray-50 border">
-      <p class="text-sm text-gray-500">Prediction Result</p>
-      <p id="predictionText" class="text-2xl font-bold text-blue-600 mt-1"></p>
+    <div id="resultCard" class="hidden mt-8 p-6 rounded-xl bg-white shadow-inner border border-slate-100">
+      <p class="text-xs font-bold tracking-wider text-slate-400 uppercase">Diagnosis</p>
+      <p id="predictionText" class="text-4xl font-black text-slate-800 mt-2 tracking-tight"></p>
     </div>
   </div>
 
@@ -31,27 +47,42 @@
     function previewImage(event) {
       const file = event.target.files[0];
       if (!file) return;
-      
       const reader = new FileReader();
       reader.onload = function(e) {
-        // Strip data prefix (e.g., "data:image/jpeg;base64,") for decodeImage compatibility
-        base64Image = e.target.result.split(',')[1]; 
+        base64Image = e.target.result.split(',')[1];
         document.getElementById('imagePreview').src = e.target.result;
         document.getElementById('imagePreview').classList.remove('hidden');
         document.getElementById('uploadText').classList.add('hidden');
+        document.getElementById('resetBtn').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     }
 
+    function resetUI() {
+      base64Image = "";
+      document.getElementById('imageInput').value = "";
+      document.getElementById('imagePreview').src = "";
+      document.getElementById('imagePreview').classList.add('hidden');
+      document.getElementById('uploadText').classList.remove('hidden');
+      document.getElementById('resultCard').classList.add('hidden');
+      document.getElementById('resetBtn').classList.add('hidden');
+      document.getElementById('btnText').innerText = "Analyze Scan";
+      document.getElementById('loadingIcon').classList.add('hidden');
+      document.getElementById('predictBtn').disabled = false;
+    }
+
     async function uploadAndPredict() {
       if (!base64Image) {
-        alert("Please select an OCT image first.");
+        alert("Please select an OCT scan first.");
         return;
       }
-      
       const btn = document.getElementById('predictBtn');
-      btn.innerText = "Analyzing...";
+      const loadingIcon = document.getElementById('loadingIcon');
+      const btnText = document.getElementById('btnText');
+      
       btn.disabled = true;
+      loadingIcon.classList.remove('hidden');
+      btnText.innerText = "Processing...";
 
       try {
         const response = await fetch('/predict', {
@@ -59,15 +90,26 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ image: base64Image })
         });
-
         const data = await response.json();
-        document.getElementById('predictionText').innerText = data[0].image;
+        const resultText = data[0].image;
+        const textElement = document.getElementById('predictionText');
+        
+        textElement.innerText = resultText;
+        
+        // [Guess: Mapping safe/risk colors based on the 4 categorical outputs]
+        if (resultText === 'NORMAL') {
+            textElement.className = 'text-4xl font-black text-emerald-500 mt-2 tracking-tight';
+        } else {
+            textElement.className = 'text-4xl font-black text-rose-500 mt-2 tracking-tight';
+        }
+
         document.getElementById('resultCard').classList.remove('hidden');
       } catch (err) {
-        alert("Prediction request failed.");
+        alert("Inference failed. Check your Flask console for model loading errors.");
       } finally {
-        btn.innerText = "Predict Diagnosis";
         btn.disabled = false;
+        loadingIcon.classList.add('hidden');
+        btnText.innerText = "Analyze Scan";
       }
     }
   </script>
